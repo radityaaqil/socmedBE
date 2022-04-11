@@ -1,0 +1,85 @@
+POST http://localhost:5000/auth/register HTTP/1.1
+Content-Type: application/json
+
+{
+    "username" : "raditya_am",
+    "email" : "radityaaqil@gmail.com",
+    "fullname" : "prrrikitiw",
+    "password" : "aaaaaaaaA1!",
+    "confirmPassword" : "aaaaaaaaA1!"
+}
+
+###
+
+GET http://localhost:5000/auth/verified HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzUsInVzZXJuYW1lIjoicmFkaXR5YV9hbSIsImlhdCI6MTY0OTY2NzgxOSwiZXhwIjoxNjQ5Njc1MDE5fQ.GA02vGKJcGFNvMtXAAw6mUuKe0x6Z4D_mTJoUKYHrjE
+
+{
+    
+}
+
+###
+
+POST http://localhost:5000/auth/sendemail-verified HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjUsInVzZXJuYW1lIjoicmFkaXR5YV9hbSIsInRpbWVjcmVhdGVkIjoxNjQ5MjUzMDM2MjE0LCJpYXQiOjE2NDkyNTMwMzYsImV4cCI6MTY0OTI2MDIzNn0.C3QYC2taALJlNANse5LMgaBwOBP_gmoLLMItWg9dyDs
+
+{
+    "id":24,
+    "email":"radityaaqil@gmail.com",
+    "username":"raditya_am"
+}
+
+###
+
+POST http://localhost:5000/auth/login HTTP/1.1
+Content-Type: application/json
+
+{
+    "username" : "raditya_am",
+    "email" : "radityaaqil@gmail.com",
+    "password" : "aaaaaaaaA1!"
+}
+
+###
+
+GET http://localhost:5000/auth/verified HTTP/1.1
+Content-Type: application/json
+
+{
+    "id" : 20
+}
+
+###
+
+POST http://localhost:5000/auth/sendemail-verified HTTP/1.1
+Content-Type: application/json
+
+{
+    "id" : "15",
+    "username" : "myname"
+}
+
+###
+
+GET http://localhost:5000/auth/keeplogin HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjAsInVzZXJuYW1lIjoicmFkaXR5YV9hbSIsImlhdCI6MTY0OTI0MjA5MiwiZXhwIjoxNjQ5MjQ5MjkyfQ.HOKiIWtYZv1SdC6jhjDc4p1wgHSX-aAHmYLuNw7oy_g
+
+{
+    "id" : 20
+}
+
+###
+
+PATCH  http://localhost:5000/profile/updateprofile HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzUsInVzZXJuYW1lIjoicmFkaXR5YV9hbSIsImlhdCI6MTY0OTY2NjMyNiwiZXhwIjoxNjQ5NjczNTI2fQ.LHb5bv5huMkWBSbUD1kkKFeBTkZfYRGYC0NcBNxiHhM
+
+{
+    "fullname" : "Sebastian Vettelszadadasadaddasd",
+    "bio" : "4x WDC"
+}
+
+
