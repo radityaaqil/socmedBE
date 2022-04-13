@@ -3,6 +3,7 @@ const { updateProfile } = require("../controllers/profileControllers");
 const Router = express.Router();
 const { verifyTokenAccess } = require("../lib/verifyToken");
 
+
 Router.patch("/updateprofile", verifyTokenAccess, updateProfile);
 
 

@@ -6,6 +6,7 @@ const handlebars = require("handlebars");
 const myCache = require("./../lib/cache");
 const path = require("path");
 const fs = require("fs");
+const { token } = require("morgan");
 
 let transporter = nodemailer.createTransport({
   service : "gmail",
@@ -30,7 +31,6 @@ module.exports = {
       const dataToken = {
         id: userData.id,
         username: userData.username,
-        email : userData.email,
         timecreated
       };
 
@@ -139,14 +139,14 @@ module.exports = {
   },
 
   sendEmailVerified: async (req, res) => {
-    const { id, email, username } = req.user;
+    const { id, username, email } = req.body;
+    console.log(req.body)
     try {
       //Create something unique
       let timecreated = new Date().getTime()
       const dataToken = {
         id: id,
         username: username,
-        email : email,
         timecreated
       };
 
@@ -167,13 +167,13 @@ module.exports = {
       let filepath = path.resolve(__dirname, "../templates/templateEmailHTML.html");
       // ubah html jadi string pake fs.readfile
       let htmlString = fs.readFileSync(filepath, "utf-8");
-      console.log(htmlString);
+
       const template = handlebars.compile(htmlString);
       const htmlToEmail = template({
         username: username,
         link,
       });
-      console.log(htmlToEmail);
+ 
       await transporter.sendMail({
         from: "Prikitiw <funfungoodtime@gmail.com>",
         to: email,

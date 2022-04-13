@@ -8,26 +8,26 @@ const { dbCon } = require("./src/connections");
 const multer = require("multer")
 
 //Multer
-const fileStorageEngine = multer.diskStorage({
-  destination : (req, file, cb) => {
-    cb(null, "./public/photos")
-  },
-  filename : (req, file, cb) => {
-    cb(null, Date.now() + "--" + file.originalname)
-  }
-});
+// const fileStorageEngine = multer.diskStorage({
+//   destination : (req, file, cb) => {
+//     cb(null, "./public/photos")
+//   },
+//   filename : (req, file, cb) => {
+//     cb(null, Date.now() + "--" + file.originalname)
+//   }
+// });
 
-const upload = multer({storage : fileStorageEngine});
+// const upload = multer({storage : fileStorageEngine});
 
-app.post('/single', upload.single("photo"), (req, res) => {
-  console.log(req.file)
-  res.send("Single upload success")
-})
+// app.post('/single', upload.single("photo"), (req, res) => {
+//   console.log(req.file)
+//   res.send("Single upload success")
+// })
 
-app.post('/multiple', upload.array('photos', 4) ,(req, res) => {
-  console.log(req.files)
-  res.send("Multiple upload success")
-})
+// app.post('/multiple', upload.array('photos', 4) ,(req, res) => {
+//   console.log(req.files)
+//   res.send("Multiple upload success")
+// })
 
 //Morgan
 morgan.token("date", function (req, res) {
@@ -70,6 +70,10 @@ app.use("/auth", authRoutes);
 //Profile Routes
 const { profileRoutes } = require("./src/routes");
 app.use("/profile", profileRoutes);
+
+//Photo Routes
+const { photoRoutes } = require("./src/routes");
+app.use("/photos", photoRoutes)
 
 //LISTEN
 app.listen(PORT, () => console.log(`App running on PORT ${PORT}`))
