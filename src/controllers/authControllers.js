@@ -95,7 +95,7 @@ module.exports = {
     let conn, sql
     try {
       conn = await dbCon.promise();
-      sql = `select id, username, isVerified, email from users where id = ?`
+      sql = `select * from users where id = ?`
       let [result] = await conn.query(sql, [id])
       return res.status(200).send(result[0])
     } catch (error) {

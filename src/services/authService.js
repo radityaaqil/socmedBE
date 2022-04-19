@@ -95,7 +95,6 @@ module.exports = {
         console.log(result);
         if (!result.length) {
           // user tidak ditemukan
-          console.log("tes");
           throw { message: "User not found" };
         }
         conn.release();

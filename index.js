@@ -5,7 +5,7 @@ const PORT = process.env.PORT
 const cors = require("cors")
 const morgan = require("morgan")
 const { dbCon } = require("./src/connections");
-const multer = require("multer")
+const multer = require("multer");
 
 //Multer
 // const fileStorageEngine = multer.diskStorage({
@@ -73,7 +73,11 @@ app.use("/profile", profileRoutes);
 
 //Photo Routes
 const { photoRoutes } = require("./src/routes");
-app.use("/photos", photoRoutes)
+app.use("/photos", photoRoutes);
+
+//Post Routes
+const { postRoutes } = require("./src/routes");
+app.use("/post", postRoutes);
 
 //LISTEN
 app.listen(PORT, () => console.log(`App running on PORT ${PORT}`))
