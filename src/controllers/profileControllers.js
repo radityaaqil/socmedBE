@@ -10,19 +10,11 @@ module.exports = {
           conn = await dbCon.promise().getConnection();
          
           await conn.beginTransaction();
- 
-          sql = `select id from users where id = ? and isVerified = 1`;
-          let [userVerified] = await conn.query(sql, [id]);
-          console.log(req.user);
-          if (!userVerified.length) {
-            throw { message: "Your account is not verified" };
-          }
 
           sql = `select id from users where username = ?`;
           let [usernameMatch] = await conn.query(sql, [username]);
           console.log(req.user);
           if (usernameMatch.length) {
-     
             throw { message: "Username has already been used" };
           }
           
@@ -51,6 +43,7 @@ module.exports = {
         const { id } = req.user;
         console.log("ini req.file profile_picture", req.file);
         let path = "/photos";
+        // let {image} = req.files
         // simpan ke database '/books/book1648525218611.jpeg'
         const imagePath = req.file ? `${path}/${req.file.filename}` : null
         console.log(imagePath)
@@ -66,10 +59,13 @@ module.exports = {
           };
           await conn.query(sql, [updateData, id]);
 
-          sql = `select * from users `
-          return res.status(200).send({ message: "berhasil upload foto" });
+          sql = `select profile_picture from users where id = ?`
+          let [result] = await conn.query(sql, id)
+          conn.release();
+          return res.status(200).send(result[0]);
         } catch (error) {
           console.log(error);
+          conn.release();
           return res.status(500).send({ message: error.message || error });
         }
       },
@@ -92,9 +88,11 @@ module.exports = {
             cover_picture: imagePath,
           };
           await conn.query(sql, [updateData, id]);
+          conn.release();
           return res.status(200).send({ message: "Successfully uploaded photo" });
         } catch (error) {
           console.log(error);
+          conn.release();
           return res.status(500).send({ message: error.message || error });
         }
       },
@@ -111,9 +109,11 @@ module.exports = {
             cover_picture: imagePath,
           };
           await conn.query(sql, [updateData, id]);
+          conn.release();
           return res.status(200).send({ message: "Photo deleted" });
         } catch (error) {
           console.log(error);
+          conn.release();
           return res.status(500).send({ message: error.message || error });
         }
       },     

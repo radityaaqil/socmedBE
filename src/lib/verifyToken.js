@@ -6,7 +6,7 @@ module.exports = {
     //? tanpa express bearer token
     const authHeader = req.headers["authorization"];
     let token;
-    console.log(authHeader); // `Bearer `
+    console.log(authHeader); // `Bearer`
     if (authHeader) {
       token = authHeader.split(" ")[1] ? authHeader.split(" ")[1] : authHeader;
       // ini bearer
@@ -14,7 +14,7 @@ module.exports = {
     } else {
       token = null;
     }
-    //? dengan express bearer token
+    // ? dengan express bearer token
     //   console.log("token", req.token);
     //   const token = req.token;
     let key = process.env.JWT_SECRET;

@@ -86,7 +86,7 @@ module.exports = {
       return res.status(200).send(userData)
     } catch (error) {
       console.log(error)
-      return res.status(500).send({ message : error.message || error})
+      return res.status(500).send({ message : "User not found" || error})
     }
   },
   

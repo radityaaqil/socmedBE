@@ -103,7 +103,7 @@ module.exports = {
       } catch (error) {
         conn.release();
         console.log(error);
-        return new Error(error.message || error)
+        throw new Error(error.message || error)
       } 
     },    
 }

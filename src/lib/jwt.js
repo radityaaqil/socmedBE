@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 module.exports = {
   createJwtAccess: (data) => {
     //   buat
-    return jwt.sign(data, process.env.JWT_SECRET, { expiresIn: "2h" });
+    return jwt.sign(data, process.env.JWT_SECRET, { expiresIn: "6h" });
   },
   createJwtemail: (data) => {
     //   buat token email
