@@ -251,19 +251,32 @@ module.exports = {
             // klo image baru ada maka hapus image lama
             if (result[0].photos) {
               for (let i = 0; i < result[0].photos.length; i++) {
-                const element = result[0].photos[i].image;
+                const element = result[0].photos[i];
                 fs.unlinkSync("./public" + element);   
               }
             }
+            console.log(imagePath)
           }
+
+          sql = `delete from post_image where post_id = ?`
+          await conn.query(sql, postID)
      
-          sql = `update post_image set ?`; 
+          // sql = `Update post_image set ? where post_id = ?`; 
+          sql = `insert into post_image set ?`
+          // for (let i = 0; i < imagePath.length; i++) {
+          //   let val = imagePath[i];
+          //   let updateDataImage = {
+          //     image: val,
+          //   };
+          //   await conn.query(sql, [updateDataImage, postID]);
+          // }
           for (let i = 0; i < imagePath.length; i++) {
             let val = imagePath[i];
-            let updateDataImage = {
+            let insertDataImage = {
               image: val,
+              post_id: postID,
             };
-            await conn.query(sql, updateDataImage);
+            await conn.query(sql, insertDataImage);
           }
           //GET DATA POST LAGI
           sql = `select userID, postID, caption, fullname, username, profile_picture, updated_at, created_at from getpost where postID = ?`;
@@ -271,7 +284,7 @@ module.exports = {
 
           sql =`select id, image from post_image where post_id = ?`;
 
-          for (let i = 0; i < result.length; i++) {
+          for (let i = 0; i < result1.length; i++) {
             const element = result1[i];
             const [resultImage] = await conn.query(sql, element.postID);
             console.log("ini resultImage", resultImage);
