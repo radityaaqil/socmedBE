@@ -52,7 +52,7 @@ module.exports = {
         }
         let conn, sql;
         try {
-          conn = dbCon.promise();
+          conn = await dbCon.promise().getConnection();
           sql = `update users set ? where id = ?`;
           let updateData = {
             profile_picture: imagePath,
