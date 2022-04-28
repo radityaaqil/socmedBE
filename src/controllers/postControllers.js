@@ -457,12 +457,12 @@ module.exports = {
           order by post_comment.created_at desc`;
           let [commentPost] = await conn.query(sql, postID);
 
-          // sql = `select created_at from post_comment where post_id = ?`
-          // for (let i = 0; i < commentPost.length; i++) {
-          //   const element = commentPost[i];
-          //   const [resultDate] = await conn.query(sql, element.postID);
-          //   commentPost[i] = { ...commentPost[i], fromnow: moment(resultDate[0].created_at).fromNow() }; 
-          // }
+          sql = `select created_at from post_comment where post_id = ?`
+          for (let i = 0; i < commentPost.length; i++) {
+            const element = commentPost[i];
+            const [resultDate] = await conn.query(sql, element.post_id);
+            commentPost[i] = { ...commentPost[i], fromnow: moment(resultDate[0].created_at).fromNow() }; 
+          }
           conn.release();
           conn.commit();
           return res.status(200).send(commentPost)
