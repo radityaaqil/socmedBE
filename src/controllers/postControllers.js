@@ -122,6 +122,7 @@ module.exports = {
           sql =`select userID, postID, caption, fullname, username, profile_picture, updated_at, created_at from getpost where userID = ? order by updated_at desc`;
           let [result] = await conn.query(sql, id);
 
+          //Time
           sql = `select updated_at from getpost where postID = ?`
           for (let i = 0; i < result.length; i++) {
             const element = result[i];
@@ -131,6 +132,7 @@ module.exports = {
 
           sql =`select id, image from post_image where post_id = ?`;
 
+          //Photos
           for (let i = 0; i < result.length; i++) {
             const element = result[i];
             const [resultImage] = await conn.query(sql, element.postID);
@@ -138,11 +140,38 @@ module.exports = {
             result[i] = { ...result[i], photos: resultImage };
           }
 
+          //Likes count
+          sql = `select count(*) likes_count from likes where post_id = ?`
+          for (let i = 0; i < result.length; i++) {
+            const element = result[i];
+            const [resultLikes] = await conn.query(sql, element.postID);
+            result[i] = { ...result[i], likes: resultLikes[0].likes_count };
+          }
+
+          //Comments count
+          sql =`SELECT count(comment) as comments FROM post_comment where post_id = ?`;
+          for (let i = 0; i < result.length; i++) {
+            const element = result[i];
+            const [resultComments] = await conn.query(sql, element.postID);
+            result[i] = { ...result[i], comments: resultComments[0].comments };
+          }
+
+           //Already liked
+           sql = `select post.id postID, post.user_id post_U_ID, post.caption, if(likes.id is null, 0 ,1) as already_liked
+           from post
+           left join likes on likes.post_id = post.id
+           where post.user_id = ? and post.id = ?`
+           for (let i = 0; i < result.length; i++) {
+             const element = result[i];
+             const [resultHadLiked] = await conn.query(sql, [element.userID, element.postID])
+             result[i] = { ...result[i], alreadyliked: resultHadLiked[0].already_liked}
+           }
+
           console.log("ini result", result)
 
           conn.release();
           conn.commit();
-          return res.status(200).send(result)
+          return res.status(200).send(result);
         } catch (error){
           console.log(error);
           conn.release();
@@ -487,6 +516,205 @@ module.exports = {
         } catch (error) {
           console.log(error);
           conn.release();
+          return res.status(500).send({ message: error.message || error });
+        }
+      },
+
+      getUserComments : async (req, res) => {
+        const { id } = req.user
+
+        let conn, sql;
+
+        try {
+          conn = await dbCon.promise().getConnection();
+
+          sql = `select post_comment.id, post_comment.comment, post_comment.post_id, post_comment.user_id, post_comment.created_at, users.username, users.profile_picture from post_comment
+          join users on users.id = post_comment.user_id
+          where post_comment.user_id = ?
+          order by post_comment.created_at desc;`;
+          let [result] = await conn.query(sql, id)
+
+          sql = `select created_at from post_comment where post_id = ?`
+          for (let i = 0; i < result.length; i++) {
+            const element = result[i];
+            const [resultDate] = await conn.query(sql, element.post_id);
+            result[i] = { ...result[i], fromnow: moment(resultDate[0].created_at).fromNow() }; 
+          }
+          
+          conn.release();
+          return res.status(200).send(result)
+        } catch (error) {
+          console.log(error)
+          conn.release();
+          return res.status(500).send({message:error.message})
+        }
+      },
+
+      getUserPostMedia : async (req, res) => {
+        const { id } = req.user
+
+        let conn, sql;
+        try {
+          conn = await dbCon.promise().getConnection();
+           
+          await conn.beginTransaction();
+
+          sql =`select userID, postID, caption, fullname, username, profile_picture, updated_at, created_at from getpost where userID = ? order by updated_at desc`;
+          let [result] = await conn.query(sql, id);
+
+          //Time
+          sql = `select updated_at from getpost where postID = ?`
+          for (let i = 0; i < result.length; i++) {
+            const element = result[i];
+            const [resultDate] = await conn.query(sql, element.postID);
+            result[i] = { ...result[i], fromnow: moment(resultDate[0].updated_at).fromNow() }; 
+          }
+
+          sql =`select id, image from post_image where post_id = ?`;
+
+          //Photos
+          for (let i = 0; i < result.length; i++) {
+            const element = result[i];
+            const [resultImage] = await conn.query(sql, element.postID);
+            console.log("ini resultImage", resultImage);
+            result[i] = { ...result[i], photos: resultImage };
+          }
+
+          //Likes count
+          sql = `select count(*) likes_count from likes where post_id = ?`
+          for (let i = 0; i < result.length; i++) {
+            const element = result[i];
+            const [resultLikes] = await conn.query(sql, element.postID);
+            result[i] = { ...result[i], likes: resultLikes[0].likes_count };
+          }
+
+          //Comments count
+          sql =`SELECT count(comment) as comments FROM post_comment where post_id = ?`;
+          for (let i = 0; i < result.length; i++) {
+            const element = result[i];
+            const [resultComments] = await conn.query(sql, element.postID);
+            result[i] = { ...result[i], comments: resultComments[0].comments };
+          }
+
+           //Already liked
+           sql = `select post.id postID, post.user_id post_U_ID, post.caption, if(likes.id is null, 0 ,1) as already_liked
+           from post
+           left join likes on likes.post_id = post.id
+           where post.user_id = ? and post.id = ?`
+           for (let i = 0; i < result.length; i++) {
+             const element = result[i];
+             const [resultHadLiked] = await conn.query(sql, [element.userID, element.postID])
+             result[i] = { ...result[i], alreadyliked: resultHadLiked[0].already_liked}
+           }
+
+           let newArray = result.filter((val)=>{
+             return val.photos.length>0
+           });
+
+          console.log("ini result", result)
+          console.log("ini result", newArray)
+
+          conn.release();
+          conn.commit();
+          // return res.status(200).send(result);
+          return res.status(200).send(newArray);
+        } catch (error){
+          console.log(error);
+          conn.release();
+          conn.rollback();
+          return res.status(500).send({ message: error.message || error });
+        }
+      },
+
+      getLikedPosts : async (req,res) => {
+        // const { id } = req.user
+        let { page, limit } = req.query;
+        // initialize offSet limit
+        if (!page) {
+          page = 0;
+        }
+        if (!limit) {
+          limit = 10;
+        }
+        let offset = page * limit;
+
+        // jadiin INT
+        limit = parseInt(limit);
+
+        let conn, sql
+        try {
+          conn = await dbCon.promise().getConnection()
+
+          await conn.beginTransaction();
+          sql =`select userID, postID, caption, fullname, username, profile_picture, updated_at, created_at from getpost order by updated_at desc limit ${dbCon.escape(
+            offset
+          )}, ${dbCon.escape(limit)}`;
+          let [result] = await conn.query(sql);
+
+          sql = `select updated_at from getpost where postID = ?`
+          for (let i = 0; i < result.length; i++) {
+            const element = result[i];
+            const [resultDate] = await conn.query(sql, element.postID);
+            result[i] = { ...result[i], fromnow: moment(resultDate[0].updated_at).fromNow() }; 
+          }
+
+          // console.log(result)
+
+          //Photo
+          sql =`select id, image from post_image where post_id = ?`;
+
+          for (let i = 0; i < result.length; i++) {
+            const element = result[i];
+            const [resultImage] = await conn.query(sql, element.postID);
+            result[i] = { ...result[i], photos: resultImage };
+          }
+
+          //Likes count
+          sql = `select count(*) likes_count from likes where post_id = ?`
+          for (let i = 0; i < result.length; i++) {
+            const element = result[i];
+            const [resultLikes] = await conn.query(sql, element.postID);
+            result[i] = { ...result[i], likes: resultLikes[0].likes_count };
+          }
+
+          //Already liked
+          sql = `select post.id postID, post.user_id post_U_ID, post.caption, if(likes.id is null, 0 ,1) as already_liked
+          from post
+          left join likes on likes.post_id = post.id
+          where post.user_id = ? and post.id = ?`
+          for (let i = 0; i < result.length; i++) {
+            const element = result[i];
+            const [resultHadLiked] = await conn.query(sql, [element.userID, element.postID])
+            result[i] = { ...result[i], alreadyliked: resultHadLiked[0].already_liked}
+          }
+
+          //Comments
+          sql =`SELECT count(comment) as comments FROM post_comment where post_id = ?`;
+          for (let i = 0; i < result.length; i++) {
+            const element = result[i];
+            const [resultComments] = await conn.query(sql, element.postID);
+            result[i] = { ...result[i], comments: resultComments[0].comments };
+          }
+
+          let newArray = result.filter((val => {
+            return val.alreadyliked == 1
+          }))
+
+
+          sql = `SELECT COUNT(*) as total_posts FROM post`;
+          let [totalPosts] = await conn.query(sql);
+
+          // console.log("ini result", result)
+
+          res.set("x-total-count", totalPosts[0].total_posts);
+
+          conn.release();
+          conn.commit();
+          return res.status(200).send(newArray)
+        } catch (error){
+          console.log(error);
+          conn.release();
+          conn.rollback();
           return res.status(500).send({ message: error.message || error });
         }
       },
