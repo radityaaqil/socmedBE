@@ -532,7 +532,7 @@ module.exports = {
           join users on users.id = post_comment.user_id
           where post_comment.user_id = ?
           order by post_comment.created_at desc;`;
-          let [result] = await conn.query(sql, id)
+          let [result] = await conn.query(sql, id);
 
           sql = `select created_at from post_comment where post_id = ?`
           for (let i = 0; i < result.length; i++) {

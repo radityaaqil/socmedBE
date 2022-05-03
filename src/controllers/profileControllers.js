@@ -82,14 +82,17 @@ module.exports = {
         }
         let conn, sql;
         try {
-          conn = dbCon.promise();
+          conn = await dbCon.promise().getConnection();
           sql = `update users set ? where id = ?`;
           let updateData = {
             cover_picture: imagePath,
           };
           await conn.query(sql, [updateData, id]);
+
+          sql = `select cover_picture from users where id = ?`
+          let [result] = await conn.query(sql, id)
           conn.release();
-          return res.status(200).send({ message: "Successfully uploaded photo" });
+          return res.status(200).send(result[0]);
         } catch (error) {
           console.log(error);
           conn.release();
@@ -109,11 +112,9 @@ module.exports = {
             cover_picture: imagePath,
           };
           await conn.query(sql, [updateData, id]);
-          conn.release();
           return res.status(200).send({ message: "Photo deleted" });
         } catch (error) {
           console.log(error);
-          conn.release();
           return res.status(500).send({ message: error.message || error });
         }
       },     
