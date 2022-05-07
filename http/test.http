@@ -155,9 +155,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDgsInVzZXJuY
 
 ###
 
-GET http://localhost:5000/post/getuserpostdetail/60 HTTP/1.1
+GET http://localhost:5000/post/getuserpostdetail/94 HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDgsInVzZXJuYW1lIjoicmVhbGdpZ2loYWRpZCIsImlhdCI6MTY1MDgwMTY2MCwiZXhwIjoxNjUwODIzMjYwfQ.uc228MMjLORaNSEgjJS189bwBbrK0pTTcT5mqSmOoK4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDgsInVzZXJuYW1lIjoicmVhbGdpZ2loYWRpZCIsImlhdCI6MTY1MTc0NjkyMCwiZXhwIjoxNjUxNzY4NTIwfQ.nOtv4TC-R6Ap0FRbEw5we2C2EcXBgd_SjPYfn0P7Jn0
 
 {
     
@@ -213,7 +213,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDcsInVzZXJuY
 ###
 
 GET http://localhost:5000/post/getusercomment HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDgsInVzZXJuYW1lIjoicmVhbGdpZ2loYWRpZCIsImlhdCI6MTY1MTI0MjMzMywiZXhwIjoxNjUxMjYzOTMzfQ.9iPpgMUvyxg9gvYOcitMBk-o5iQMqifjjMnzgxuFS6k
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDcsInVzZXJuYW1lIjoicmVhbGJhcmJhcmFwYWx2aW5uIiwiaWF0IjoxNjUxNzM2NzI2LCJleHAiOjE2NTE3NTgzMjZ9.BkSSbgS33cm3r_sV9O10fVLUK2YEfyv1deyFADBIt48
 
 {
     

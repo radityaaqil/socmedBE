@@ -7,6 +7,6 @@ module.exports = {
   },
   createJwtemail: (data) => {
     //   buat token email
-    return jwt.sign(data, process.env.JWT_SECRET, { expiresIn: "1m" });
+    return jwt.sign(data, process.env.JWT_SECRET, { expiresIn: "5m" });
   },
 };

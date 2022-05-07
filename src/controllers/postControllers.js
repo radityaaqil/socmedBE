@@ -215,7 +215,6 @@ module.exports = {
 
           sql = `select * from post`;
           let [result2] = await conn.query(sql);
-          await conn.commit();
           conn.release();
           conn.commit();
           return res.status(200).send(result2);
@@ -271,6 +270,7 @@ module.exports = {
 
       getUserPostDetail : async(req,res) => {
         const { postID } = req.params
+        const { id } = req.user
         let conn, sql
         try {
           conn = await dbCon.promise().getConnection();
@@ -295,6 +295,16 @@ module.exports = {
             const [resultLikes] = await conn.query(sql, element.postID);
             console.log("ini resultLikes", resultLikes);
             result[i] = { ...result[i], likes: resultLikes[0].likes_count };
+          }
+          
+          sql = `select post.id postID, post.user_id post_U_ID, post.caption, if(likes.id is null, 0 ,1) as already_liked
+          from post
+          left join likes on likes.post_id = post.id
+          where post.user_id = ? and post.id = ?`
+          for (let i = 0; i < result.length; i++) {
+            const element = result[i];
+            const [resultHadLiked] = await conn.query(sql, [element.userID, element.postID])
+            result[i] = { ...result[i], alreadyliked: resultHadLiked[0].already_liked}
           }
 
           console.log("ini result", result)
@@ -528,6 +538,8 @@ module.exports = {
         try {
           conn = await dbCon.promise().getConnection();
 
+          await conn.beginTransaction();
+
           sql = `select post_comment.id, post_comment.comment, post_comment.post_id, post_comment.user_id, post_comment.created_at, users.username, users.profile_picture from post_comment
           join users on users.id = post_comment.user_id
           where post_comment.user_id = ?
@@ -540,12 +552,28 @@ module.exports = {
             const [resultDate] = await conn.query(sql, element.post_id);
             result[i] = { ...result[i], fromnow: moment(resultDate[0].created_at).fromNow() }; 
           }
+
+          sql = `select user_id from post where id = ?`
+          for (let i = 0; i < result.length; i++) {
+            const element = result[i];
+            const [resultUser] = await conn.query(sql, element.post_id);
+            result[i] = { ...result[i], postowner_id: resultUser[0].user_id }; 
+          }
+
+          sql = `select username from users where id = ?`
+          for (let i = 0; i < result.length; i++) {
+            const element = result[i];
+            const [resultUsername] = await conn.query(sql, element.postowner_id);
+            result[i] = { ...result[i], postowner_username: resultUsername[0].username }; 
+          }
           
           conn.release();
+          conn.commit();
           return res.status(200).send(result)
         } catch (error) {
           console.log(error)
           conn.release();
+          conn.rollback();
           return res.status(500).send({message:error.message})
         }
       },

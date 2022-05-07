@@ -95,7 +95,7 @@ module.exports = {
         console.log(result);
         if (!result.length) {
           // user tidak ditemukan
-          throw { message: "User not found" };
+          throw "User not found";
         }
         conn.release();
       // 4. Kalo user ada maka kirim data user
@@ -103,7 +103,7 @@ module.exports = {
       } catch (error) {
         conn.release();
         console.log(error);
-        throw new Error(error.message || error)
+        throw new Error(error || "Network Error")
       } 
     },    
 }
