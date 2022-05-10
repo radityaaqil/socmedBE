@@ -83,12 +83,12 @@ module.exports = {
           res.set("x-total-count", totalPosts[0].total_posts);
 
           conn.release();
-          conn.commit();
+          await conn.commit();
           return res.status(200).send(result)
         } catch (error){
           console.log(error);
           conn.release();
-          conn.rollback();
+          await conn.rollback();
           return res.status(500).send({ message: error.message || error });
         }
       },
@@ -169,13 +169,13 @@ module.exports = {
 
           console.log("ini result", result)
 
+          await conn.commit();
           conn.release();
-          conn.commit();
           return res.status(200).send(result);
         } catch (error){
           console.log(error);
+          await conn.rollback();
           conn.release();
-          conn.rollback();
           return res.status(500).send({ message: error.message || error });
         }
       },
@@ -215,13 +215,13 @@ module.exports = {
 
           sql = `select * from post`;
           let [result2] = await conn.query(sql);
+          await conn.commit();
           conn.release();
-          conn.commit();
           return res.status(200).send(result2);
 
         } catch (error) {
+          await conn.rollback();
           conn.release();
-          conn.rollback();
           console.log(error);
           return res.status(500).send({ message: error.message || error });
         }
@@ -264,11 +264,11 @@ module.exports = {
           sql = `select userID, postid, caption, fullname, username, profile_picture, updated_at, created_at from getpost order by updated_at desc`;
           let [posts] = await conn.query(sql);
           conn.release();
-          conn.commit()
+          await conn.commit();
           return res.status(200).send(posts);
         } catch (error) {
           conn.release();
-          conn.rollback()
+          await conn.rollback()
           console.log(error);
           return res.status(500).send({ message: error.message || error });
         }
@@ -315,13 +315,13 @@ module.exports = {
 
           console.log("ini result", result)
 
+          await conn.commit();
           conn.release();
-          conn.commit();
           return res.status(200).send(result)
         } catch (error){
           console.log(error);
+          await conn.rollback();
           conn.release();
-          conn.rollback();
           return res.status(500).send({ message: error.message || error });
         }
       },
@@ -358,9 +358,9 @@ module.exports = {
           // console.log(resultImage, "images sbelum diganti")
 
           // hapus image
-          if (imagePath) {
+          if (imagePath.length) {
             // klo image baru ada maka hapus image lama
-            if (resultImage[0].image) {
+            if (resultImage.length) {
               for (let i = 0; i < resultImage.length; i++) {
                 const element = resultImage[i].image;
                 fs.unlinkSync("./public" + element);   
@@ -407,16 +407,16 @@ module.exports = {
             result1[i] = { ...result1[i], photos: resultImage };
           }
           console.log(result1)
+          await conn.commit();
           conn.release();
-          conn.commit();
           return res.send(result1);
         } catch (error) {
           // if (imagePath) {
           //   fs.unlinkSync("./public" + imagePath);
           // }
           console.log(error);
+          await conn.rollback();
           conn.release();
-          conn.rollback();
           return res.status(500).send({ message: error.message || error });
         }
       },   
@@ -438,8 +438,8 @@ module.exports = {
             sql = `delete from likes where user_id = ? and post_id = ?`
             await conn.query(sql, [id, postID])
             console.log("unlike")
+            await conn.commit();
             conn.release();
-            conn.commit();
             return res.status(200).send({message : "unlike"})
           }
           
@@ -452,13 +452,13 @@ module.exports = {
 
           sql = `select * from likes where user_id = ?`
           let [result] =await conn.query(sql, id)
+          await conn.commit();
           conn.release();
-          conn.commit();
           return res.status(200).send({message : "like"});
         } catch (error) {
           console.log(error);
+          await conn.rollback();
           conn.release();
-          conn.rollback();
           return res.status(500).send({ message : "error brodie"});
         }
       },
@@ -513,12 +513,12 @@ module.exports = {
             const [resultDate] = await conn.query(sql, element.post_id);
             commentPost[i] = { ...commentPost[i], fromnow: moment(resultDate[0].created_at).fromNow() }; 
           }
+          await conn.commit();
           conn.release();
-          conn.commit();
           return res.status(200).send(commentPost)
         } catch (error) {
+          await conn.rollback();
           conn.release();
-          conn.rollback();
           return res.status(500).send({message:error.message})
         }
       },
@@ -578,13 +578,13 @@ module.exports = {
             result[i] = { ...result[i], postowner_username: resultUsername[0].username }; 
           }
           
+          await conn.commit();
           conn.release();
-          conn.commit();
           return res.status(200).send(result)
         } catch (error) {
           console.log(error)
+          await conn.rollback();
           conn.release();
-          conn.rollback();
           return res.status(500).send({message:error.message})
         }
       },
@@ -653,14 +653,14 @@ module.exports = {
           console.log("ini result", result)
           console.log("ini result", newArray)
 
+          await conn.commit();
           conn.release();
-          conn.commit();
           // return res.status(200).send(result);
           return res.status(200).send(newArray);
         } catch (error){
           console.log(error);
+          await conn.rollback();
           conn.release();
-          conn.rollback();
           return res.status(500).send({ message: error.message || error });
         }
       },
@@ -747,13 +747,13 @@ module.exports = {
 
           res.set("x-total-count", totalPosts[0].total_posts);
 
+          await conn.commit();
           conn.release();
-          conn.commit();
           return res.status(200).send(newArray)
         } catch (error){
           console.log(error);
+          await conn.rollback();
           conn.release();
-          conn.rollback();
           return res.status(500).send({ message: error.message || error });
         }
       },
