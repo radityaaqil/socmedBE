@@ -244,6 +244,12 @@ module.exports = {
             throw { message: "Post not found" };
           }
           //lalu delete
+          sql = `delete from post_comment where post_id = ?`
+          await conn.query(sql, postID)
+
+          sql = `delete from likes where post_id = ?`
+          await conn.query(sql, postID)
+
           sql = `delete from post_image where post_id = ?`
           await conn.query(sql, postID)
 
@@ -346,22 +352,27 @@ module.exports = {
           if (!result.length) {
             throw { message: "Post not found" };
           }
+
+          sql =`select image from post_image where post_id = ?`
+          let [resultImage] = await conn.query(sql, postID)
+          // console.log(resultImage, "images sbelum diganti")
+
+          // hapus image
+          if (imagePath) {
+            // klo image baru ada maka hapus image lama
+            if (resultImage[0].image) {
+              for (let i = 0; i < resultImage.length; i++) {
+                const element = resultImage[i].image;
+                fs.unlinkSync("./public" + element);   
+              }
+            }
+          };
+
           // update data
           sql = `Update post set ? where id = ?`;
 
           // tanda tanya untuk set harus object
           await conn.query(sql, [data, postID]);
-          // setelah update hapus image
-          if (imagePath) {
-            // klo image baru ada maka hapus image lama
-            if (result[0].photos) {
-              for (let i = 0; i < result[0].photos.length; i++) {
-                const element = result[0].photos[i];
-                fs.unlinkSync("./public" + element);   
-              }
-            }
-            console.log(imagePath)
-          }
 
           sql = `delete from post_image where post_id = ?`
           await conn.query(sql, postID)

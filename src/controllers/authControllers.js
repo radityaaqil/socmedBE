@@ -92,6 +92,7 @@ module.exports = {
       // Token email verified dan token untuk akses
       const tokenAccess = createJwtAccess(dataToken);
       res.set("x-token-access", tokenAccess);
+      console.log(tokenAccess)
       return res.status(200).send(userData);
     } catch (error) {
       console.log(error)

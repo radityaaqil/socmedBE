@@ -53,6 +53,14 @@ module.exports = {
         let conn, sql;
         try {
           conn = await dbCon.promise().getConnection();
+
+          sql = `select profile_picture from users where id = ?`
+          let [result0] = await conn.query(sql, id)
+          console.log(result0, "ini profpic sebelum")
+          if(result0.length == 1){
+            fs.unlinkSync("./public" + result0[0].profile_picture);
+          }
+
           sql = `update users set ? where id = ?`;
           let updateData = {
             profile_picture: imagePath,
@@ -61,6 +69,7 @@ module.exports = {
 
           sql = `select profile_picture from users where id = ?`
           let [result] = await conn.query(sql, id)
+          console.log(result, "ini profPic after")
           conn.release();
           return res.status(200).send(result[0]);
         } catch (error) {
@@ -83,6 +92,14 @@ module.exports = {
         let conn, sql;
         try {
           conn = await dbCon.promise().getConnection();
+
+          sql = `select cover_picture from users where id = ?`
+          let [result0] = await conn.query(sql, id)
+          console.log(result0, "ini coverpic sebelum")
+          if(result0.length == 1){
+            fs.unlinkSync("./public" + result0[0].cover_picture);
+          }
+
           sql = `update users set ? where id = ?`;
           let updateData = {
             cover_picture: imagePath,

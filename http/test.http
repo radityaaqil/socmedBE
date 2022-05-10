@@ -37,9 +37,9 @@ POST http://localhost:5000/auth/login HTTP/1.1
 Content-Type: application/json
 
 {
-    "username" : "realbarbarapalvin",
+    "username" : "realbarbarapalvinn",
     "email" : "radityaaqil@gmail.com",
-    "password" : "aaaaaaaaA1!"
+    "password" : "Octaslash1!"
 }
 
 ###
@@ -146,8 +146,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDgsInVzZXJuY
 
 ###
 
-DELETE http://localhost:5000/post/deletepost/70 HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDgsInVzZXJuYW1lIjoicmVhbGdpZ2loYWRpZCIsImlhdCI6MTY1MTAzMzA1MCwiZXhwIjoxNjUxMDU0NjUwfQ._axiOhwEv4y2Z3hlFqp-3fVYopnuQcddd_Gym7E26QY
+DELETE http://localhost:5000/post/deletepost/94 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDcsInVzZXJuYW1lIjoicmVhbGJhcmJhcmFwYWx2aW5uIiwiaWF0IjoxNjUxOTE1MzE3LCJleHAiOjE2NTE5MzY5MTd9.6zQihIxRRniHSNjaDsMkdJDalU5sV0uzS46dQRe0Hfg
 
 {
     
@@ -157,7 +157,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDgsInVzZXJuY
 
 GET http://localhost:5000/post/getuserpostdetail/94 HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDgsInVzZXJuYW1lIjoicmVhbGdpZ2loYWRpZCIsImlhdCI6MTY1MTc0NjkyMCwiZXhwIjoxNjUxNzY4NTIwfQ.nOtv4TC-R6Ap0FRbEw5we2C2EcXBgd_SjPYfn0P7Jn0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDcsInVzZXJuYW1lIjoicmVhbGJhcmJhcmFwYWx2aW5uIiwiaWF0IjoxNjUxODQ5Nzg3LCJleHAiOjE2NTE4NzEzODd9.cbvCZCJoun-EHtsWTdlvmFq39wLTxatrJnkiJPG82Kk
 
 {
     
@@ -213,7 +213,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDcsInVzZXJuY
 ###
 
 GET http://localhost:5000/post/getusercomment HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDcsInVzZXJuYW1lIjoicmVhbGJhcmJhcmFwYWx2aW5uIiwiaWF0IjoxNjUxNzM2NzI2LCJleHAiOjE2NTE3NTgzMjZ9.BkSSbgS33cm3r_sV9O10fVLUK2YEfyv1deyFADBIt48
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDcsInVzZXJuYW1lIjoicmVhbGJhcmJhcmFwYWx2aW5uIiwiaWF0IjoxNjUxODQ5Nzg3LCJleHAiOjE2NTE4NzEzODd9.cbvCZCJoun-EHtsWTdlvmFq39wLTxatrJnkiJPG82Kk
 
 {
     
