@@ -55,11 +55,15 @@ module.exports = {
           conn = await dbCon.promise().getConnection();
 
           sql = `select profile_picture from users where id = ?`
-          let [result0] = await conn.query(sql, id)
-          console.log(result0, "ini profpic sebelum")
-          if(result0.length == 1){
-            fs.unlinkSync("./public" + result0[0].profile_picture);
-          }
+          let [result0] = await conn.query(sql, id);
+          console.log(result0, "ini profpic sebelum");
+          console.log(result0.length, "ini length");
+
+          if(imagePath){
+            if(result0[0].profile_picture){
+              fs.unlinkSync("./public" + result0[0].profile_picture);  
+            }
+          };
 
           sql = `update users set ? where id = ?`;
           let updateData = {
@@ -95,9 +99,13 @@ module.exports = {
 
           sql = `select cover_picture from users where id = ?`
           let [result0] = await conn.query(sql, id)
-          console.log(result0, "ini coverpic sebelum")
-          if(result0.length == 1){
-            fs.unlinkSync("./public" + result0[0].cover_picture);
+          console.log(result0, "ini profpic sebelum")
+          console.log(result0.length, "ini length")
+          
+          if(imagePath){
+            if(result0[0].cover_picture){
+              fs.unlinkSync("./public" + result0[0].cover_picture);
+            }
           }
 
           sql = `update users set ? where id = ?`;
